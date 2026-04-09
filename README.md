@@ -1,93 +1,104 @@
-# 📈 End-to-End AI-Powered Stock Analytics Pipeline
+📈 AI-Powered Stock Intelligence Pipeline
+An End-to-End Data Engineering & Analytics solution for monitoring high-volatility tech stocks.
 
-![Python](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Enabled-blue?style=for-the-badge&logo=docker&logoColor=white)
-![Apache Airflow](https://img.shields.io/badge/Airflow-2.8.1-blue?style=for-the-badge&logo=apache-airflow&logoColor=white)
-![Gemini API](https://img.shields.io/badge/AI-Gemini_Flash-orange?style=for-the-badge)
-![Tableau](https://img.shields.io/badge/Tableau-Dashboard-blue?style=for-the-badge&logo=tableau&logoColor=white)
+📌 Project Overview
+This project is a production-grade analytical ecosystem designed to track and explain market movements of major tech companies (NVDA, AAPL, MSFT, AMD, TSM).
 
-## 📌 Project Overview
-An automated, end-to-end Data Engineering and Analytics product designed to track major tech stocks (NVDA, AAPL, MSFT, AMD, TSM). The system extracts real-time and historical market data, stores it in a local Data Warehouse, detects statistical price anomalies, and utilizes a **Large Language Model (Gemini AI)** combined with the News API to generate contextual explanations for market volatility. Alerts are delivered directly via Telegram, and data is exposed to a Tableau dashboard for visual analysis.
+The system doesn't just collect data; it interprets it. By combining statistical anomaly detection with LLM-based RAG (Retrieval-Augmented Generation), it provides instant, news-driven insights into why a stock price is surging or crashing, delivering these insights straight to Telegram.
 
-**📊 Live Dashboard:** [Insert Link to your Tableau Public here]
+💡 Key Features
+Automated ETL: Daily batch processing of historical data and intraday monitoring via Airflow.
 
-## 🏗️ System Architecture
+Anomaly Detection: Real-time identification of price deviations (> 3% or statistical Z-score spikes).
 
-```mermaid
+AI Insights (RAG): Integration with Gemini 1.5/3 Flash and News API to summarize the reason behind market volatility in 2 concise sentences.
+
+BI Visualization: A comprehensive Tableau dashboard for historical trend analysis and "Anomaly Heatmaps."
+
+Instant Alerting: Telegram bot notifications containing both data (percent change) and context (AI analysis).
+
+🏗️ System Architecture
+Фрагмент кода
 graph TD;
-    A[Yahoo Finance API] -->|Extract| B(Python ETL Scripts);
-    B -->|Load| C[(PostgreSQL DWH)];
-    C -->|Trigger| D{Anomaly Detector};
-    D -- >3% Change --> E[News API];
-    E -->|Context| F[Gemini 2.5 AI];
-    F -->|Insight| G[Telegram Bot];
-    C -->|Export| H[Tableau Dashboard];
-    I((Apache Airflow)) -.->|Orchestrates| B;
-    I -.->|Orchestrates| D;
-    I -.->|Orchestrates| H;
+    subgraph Data_Extraction
+    A[Yahoo Finance API] -->|Market Data| B(Python ETL);
+    E[News API] -->|Market Context| F[Gemini 1.5/3 Flash AI];
+    end
 
+    subgraph Storage_and_Orchestration
+    B -->|Load| C[(PostgreSQL DWH)];
+    I((Apache Airflow)) -.->|Orchestrates| B;
+    I -.->|Triggers| D{Anomaly Detector};
+    end
+
+    subgraph Analytics_and_Delivery
+    D -- ">3% Change" --> E;
+    F -->|Contextual Insight| G[Telegram Bot];
+    C -->|Analytical Views| H[Tableau Dashboard];
+    end
 ⚙️ Tech Stack
 Language: Python (Pandas, SQLAlchemy, YFinance)
-Database: PostgreSQL (Star Schema layout)
-Orchestration: Apache Airflow (Standalone via Docker)
+
+Database: PostgreSQL (Star Schema: fact_daily_prices, dim_tickers, fact_anomalies)
+
+Orchestration: Apache Airflow (Dockerized)
+
 Infrastructure: Docker & Docker Compose
-AI & APIs: Google Gemini 2.5 Flash, NewsAPI, Telegram Bot API
+
+AI & APIs: Google Gemini API, NewsAPI, Telegram Bot API
+
 BI & Visualization: Tableau Public
 
 📁 Repository Structure
-code
-Text
+Plaintext
 stock_analytics_project/
 ├── dags/
-│   └── stock_pipeline.py       # Airflow DAGs (Daily & Intraday triggers)
+│   └── stock_pipeline.py       # Airflow DAG definitions
 ├── src/
-│   ├── data/                   # Auto-generated CSVs for Tableau
-│   ├── config.py               # DB Connection Engine
-│   ├── etl_daily.py            # Batch processing for historical data
-│   ├── etl_intraday.py         # Real-time data extraction & anomaly detection
-│   ├── ai_agent.py             # LLM RAG pipeline for news analysis
-│   ├── telegram_bot.py         # Alerting system
-│   └── export_to_csv.py        # Data preparation for Tableau
+│   ├── ai_agent.py             # RAG logic: News + Gemini API integration
+│   ├── etl_daily.py            # Historical data batch processing
+│   ├── etl_intraday.py         # Real-time monitoring & Anomaly detection
+│   ├── telegram_bot.py         # Notification service
+│   └── config.py               # Centralized configuration & DB engine
 ├── sql/
-│   └── init_db.sql             # DDL scripts (Tables, Indexes, Constraints)
-├── docker-compose.yml          # Infrastructure setup
-└── requirements.txt            # Python dependencies
-🚀 How to Run Locally
-1. Clone the repository:
-code
+│   └── init_db.sql             # Database schema (DDL)
+├── docker-compose.yml          # Container orchestration (Airflow, Postgres)
+└── requirements.txt            # Project dependencies
+🚀 Quick Start (Local Deployment)
+1. Clone & Prepare
 Bash
 git clone https://github.com/yourusername/stock_analytics_project.git
 cd stock_analytics_project
-2. Setup Environment Variables:
-Create a .env file in the root directory and add the following keys:
-code
-Env
-DB_USER=postgres
-DB_PASSWORD=admin
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=stock_db
+2. Environment Setup
+Create a .env file in the root directory:
 
+Фрагмент кода
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=stock_db
+
+# External APIs
 GEMINI_API_KEY=your_gemini_key
 NEWS_API_KEY=your_newsapi_key
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
-3. Launch Infrastructure (Docker):
-code
+TELEGRAM_BOT_TOKEN=your_token
+TELEGRAM_CHAT_ID=your_id
+3. Launch Infrastructure
 Bash
-sudo docker compose up -d
-This command will spin up the PostgreSQL database (auto-executing the DDL scripts) and the Apache Airflow container.
-4. Activate the Pipeline:
-Navigate to http://localhost:8080
-Login with standard Airflow credentials (check container logs if auto-generated).
-Unpause the DAGs: daily_stock_etl and intraday_anomaly_monitor.
-🧠 Core Logic & Features
-Idempotent ETL: All SQL inserts use ON CONFLICT DO NOTHING ensuring data integrity even upon DAG restarts.
-AI Anomaly Analysis: If intraday price deviates > 3% from the previous close, the pipeline fetches the top 5 recent news articles and prompts Gemini to explain the market behavior in exactly 2 sentences.
-Resilient API Calls: Implementation of try-except blocks for the LLM API to gracefully handle 503 Service Unavailable errors during high demand.
-📱 Alert Example (Telegram)
+# Initialize Airflow (first time only)
+docker compose up airflow-init
+
+# Start all services
+docker compose up -d
+4. Access the Dashboard
+Airflow UI: http://localhost:8080 (Default: airflow/airflow)
+
+Database: localhost:5432
+
+Tableau: https://public.tableau.com/views/AI-PoweredStockMarketTracker/Dashboard1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
+
+📱 Alert Example
 🚨 ANOMALY DETECTED: NVDA
-📈 Change: -4.5%
+📈 Change: -4.8%
 🤖 AI Analysis:
-NVIDIA's stock dropped following a broader market sell-off in the semiconductor sector. Concerns over potential export restrictions to China have fueled investor uncertainty.
+NVIDIA's stock is experiencing a pullback following reports of new export restrictions on AI chips. Additionally, a broader rotation from tech to value stocks is weighing on the semiconductor sector.
