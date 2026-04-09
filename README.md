@@ -26,6 +26,7 @@ graph TD;
     I((Apache Airflow)) -.->|Orchestrates| B;
     I -.->|Orchestrates| D;
     I -.->|Orchestrates| H;
+
 ⚙️ Tech Stack
 Language: Python (Pandas, SQLAlchemy, YFinance)
 Database: PostgreSQL (Star Schema layout)
@@ -33,6 +34,7 @@ Orchestration: Apache Airflow (Standalone via Docker)
 Infrastructure: Docker & Docker Compose
 AI & APIs: Google Gemini 2.5 Flash, NewsAPI, Telegram Bot API
 BI & Visualization: Tableau Public
+
 📁 Repository Structure
 code
 Text
