@@ -26,16 +26,18 @@ graph TD;
     I((Apache Airflow)) -.->|Orchestrates| B;
     I -.->|Orchestrates| D;
     I -.->|Orchestrates| H;
-⚙️ Tech Stack
-Language: Python (Pandas, SQLAlchemy, YFinance)
-Database: PostgreSQL (Star Schema layout)
-Orchestration: Apache Airflow (Standalone via Docker)
-Infrastructure: Docker & Docker Compose
-AI & APIs: Google Gemini 2.5 Flash, NewsAPI, Telegram Bot API
-BI & Visualization: Tableau Public
-📁 Repository Structure
-code
-Text
+```
+
+## ⚙️ Tech Stack
+* **Language:** Python (Pandas, SQLAlchemy, YFinance)
+* **Database:** PostgreSQL (Star Schema layout)
+* **Orchestration:** Apache Airflow (Standalone via Docker)
+* **Infrastructure:** Docker & Docker Compose
+* **AI & APIs:** Google Gemini 2.5 Flash, NewsAPI, Telegram Bot API
+* **BI & Visualization:** Tableau Public
+
+## 📁 Repository Structure
+```text
 stock_analytics_project/
 ├── dags/
 │   └── stock_pipeline.py       # Airflow DAGs (Daily & Intraday triggers)
@@ -51,16 +53,19 @@ stock_analytics_project/
 │   └── init_db.sql             # DDL scripts (Tables, Indexes, Constraints)
 ├── docker-compose.yml          # Infrastructure setup
 └── requirements.txt            # Python dependencies
-🚀 How to Run Locally
-1. Clone the repository:
-code
-Bash
+```
+
+## 🚀 How to Run Locally
+
+**1. Clone the repository:**
+```bash
 git clone https://github.com/yourusername/stock_analytics_project.git
 cd stock_analytics_project
-2. Setup Environment Variables:
-Create a .env file in the root directory and add the following keys:
-code
-Env
+```
+
+**2. Setup Environment Variables:**
+Create a `.env` file in the root directory and add the following keys:
+```env
 DB_USER=postgres
 DB_PASSWORD=admin
 DB_HOST=localhost
@@ -71,21 +76,26 @@ GEMINI_API_KEY=your_gemini_key
 NEWS_API_KEY=your_newsapi_key
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
-3. Launch Infrastructure (Docker):
-code
-Bash
+```
+
+**3. Launch Infrastructure (Docker):**
+```bash
 sudo docker compose up -d
-This command will spin up the PostgreSQL database (auto-executing the DDL scripts) and the Apache Airflow container.
-4. Activate the Pipeline:
-Navigate to http://localhost:8080
-Login with standard Airflow credentials (check container logs if auto-generated).
-Unpause the DAGs: daily_stock_etl and intraday_anomaly_monitor.
-🧠 Core Logic & Features
-Idempotent ETL: All SQL inserts use ON CONFLICT DO NOTHING ensuring data integrity even upon DAG restarts.
-AI Anomaly Analysis: If intraday price deviates > 3% from the previous close, the pipeline fetches the top 5 recent news articles and prompts Gemini to explain the market behavior in exactly 2 sentences.
-Resilient API Calls: Implementation of try-except blocks for the LLM API to gracefully handle 503 Service Unavailable errors during high demand.
-📱 Alert Example (Telegram)
-🚨 ANOMALY DETECTED: NVDA
-📈 Change: -4.5%
-🤖 AI Analysis:
-NVIDIA's stock dropped following a broader market sell-off in the semiconductor sector. Concerns over potential export restrictions to China have fueled investor uncertainty.
+```
+*This command will spin up the PostgreSQL database (auto-executing the DDL scripts) and the Apache Airflow container.*
+
+**4. Activate the Pipeline:**
+* Navigate to `http://localhost:8080`
+* Login with standard Airflow credentials.
+* Unpause the DAGs: `daily_stock_etl` and `intraday_anomaly_monitor`.
+
+## 🧠 Core Logic & Features
+1. **Idempotent ETL:** All SQL inserts use `ON CONFLICT DO NOTHING` ensuring data integrity even upon DAG restarts.
+2. **AI Anomaly Analysis:** If intraday price deviates > 3% from the previous close, the pipeline fetches the top 5 recent news articles and prompts Gemini to explain the market behavior in exactly 2 sentences.
+3. **Resilient API Calls:** Implementation of `try-except` blocks for the LLM API to gracefully handle `503 Service Unavailable` errors during high demand periods.
+
+## 📱 Alert Example (Telegram)
+> 🚨 **ANOMALY DETECTED: NVDA**
+> 📈 **Change:** -4.5%
+> 🤖 **AI Analysis:** 
+> NVIDIA's stock dropped following a broader market sell-off in the semiconductor sector. Concerns over potential export restrictions to China have fueled investor uncertainty.
