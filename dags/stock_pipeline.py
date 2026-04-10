@@ -12,7 +12,6 @@ default_args = {
     'retry_delay': timedelta(minutes=1),
 }
 
-# 1. DAG для дневных данных
 with DAG(
     'daily_stock_etl',
     default_args=default_args,
@@ -27,10 +26,9 @@ with DAG(
         bash_command='cd /opt/airflow && python src/etl_daily.py'
     )
 
-    # Убрали зависимости, теперь тут просто одна задача
 
 
-# 2. DAG для реального времени
+
 with DAG(
     'intraday_anomaly_monitor',
     default_args=default_args,
@@ -60,5 +58,4 @@ with DAG(
         bash_command='cd /opt/airflow && python src/export_to_csv.py'
     )
 
-    # Строим цепочку напрямую с ETL
     run_intraday_etl >> run_ai_agent >> run_telegram_bot >> export_csv
