@@ -10,9 +10,9 @@
 ## 📌 Project Overview
 An automated, end-to-end Data Engineering and Analytics product designed to track major tech stocks (NVDA, AAPL, MSFT, AMD, TSM). The system extracts real-time and historical market data, stores it in a local Data Warehouse, detects statistical price anomalies, and utilizes a **Large Language Model (Gemini AI)** combined with the News API to generate contextual explanations for market volatility. Alerts are delivered directly via Telegram, and data is exposed to a Tableau dashboard for visual analysis.
 
-**📊 Live Dashboard:** [Insert Link to your Tableau Public here]
+**Live Dashboard:** [Insert Link to your Tableau Public here]
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD;
@@ -28,7 +28,7 @@ graph TD;
     I -.->|Orchestrates| H;
 ```
 
-## ⚙️ Tech Stack
+## Tech Stack
 * **Language:** Python (Pandas, SQLAlchemy, YFinance)
 * **Database:** PostgreSQL (Star Schema layout)
 * **Orchestration:** Apache Airflow (Standalone via Docker)
@@ -36,7 +36,7 @@ graph TD;
 * **AI & APIs:** Google Gemini 2.5 Flash, NewsAPI, Telegram Bot API
 * **BI & Visualization:** Tableau Public
 
-## 📁 Repository Structure
+## Repository Structure
 ```text
 stock_analytics_project/
 ├── dags/
@@ -55,7 +55,7 @@ stock_analytics_project/
 └── requirements.txt            # Python dependencies
 ```
 
-## 🚀 How to Run Locally
+## How to Run Locally
 
 **1. Clone the repository:**
 ```bash
@@ -89,13 +89,13 @@ sudo docker compose up -d
 * Login with standard Airflow credentials.
 * Unpause the DAGs: `daily_stock_etl` and `intraday_anomaly_monitor`.
 
-## 🧠 Core Logic & Features
+## Core Logic & Features
 1. **Idempotent ETL:** All SQL inserts use `ON CONFLICT DO NOTHING` ensuring data integrity even upon DAG restarts.
 2. **AI Anomaly Analysis:** If intraday price deviates > 3% from the previous close, the pipeline fetches the top 5 recent news articles and prompts Gemini to explain the market behavior in exactly 2 sentences.
 3. **Resilient API Calls:** Implementation of `try-except` blocks for the LLM API to gracefully handle `503 Service Unavailable` errors during high demand periods.
 
-## 📱 Alert Example (Telegram)
-> 🚨 **ANOMALY DETECTED: NVDA**
-> 📈 **Change:** -4.5%
-> 🤖 **AI Analysis:** 
+## Alert Example (Telegram)
+> **ANOMALY DETECTED: NVDA**
+> **Change:** -4.5%
+> **AI Analysis:** 
 > NVIDIA's stock dropped following a broader market sell-off in the semiconductor sector. Concerns over potential export restrictions to China have fueled investor uncertainty.
